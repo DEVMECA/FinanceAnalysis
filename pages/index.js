@@ -1,208 +1,360 @@
 import Head from 'next/head'
+import Script from 'next/script'
+import Link from 'next/link'
+
+import Chart from 'chart.js/auto'
+import BarGraph from './chart/bar';
+import LineGraph from './chart/line'
+import KospiGrid from './grid/kospiGrid'
+import KosdakGrid from './grid/kosdakGrid'
+import NewsGrid from './grid/newsGrid'
+
+import BubbleGraph from './chart/bubble';
+import CrazyLine from './chart/crazyLine'
+import Doughnut from './chart/doughnut'
+import DynamicDoughnut from "./chart/dynamic-doughnut";
+import HorizontalBar from './chart/horizontalBar';
+import LegendHandlers from "./chart/legend-handlers";
+import PieGraph from './chart/pie'
+import PolarGraph from './chart/polar'
+import RadarGraph from './chart/radar'
+import Scatter from './chart/scatter'
 
 export default function Home() {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Financial Analysis</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <Script src="https://www.google-analytics.com/analytics.js"></Script>
+        <Script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></Script>
       </Head>
 
       <main>
-        <h1 className="title">
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className="description">
-          Get started by editing <code>pages/index.js</code>
-        </p>
-
-        <div className="grid">
-          <a href="https://nextjs.org/docs" className="card">
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className="card">
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className="card"
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="card"
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className='header fullWidth'>
+          <div id='titleDiv' className='halfWidth'>
+            <Link href="/">
+              <img src='/images/statistics.png' id='headerIcon'></img>
+            </Link>
+            <h2>Financial Analysis</h2>
+          </div>
+          <div id='menuDiv' className='halfWidth'>
+            <nav>
+              <button>HOME</button>
+              <button>MARKET</button>
+              <button>TRADE</button>
+              <button>PRICING</button>
+              <button>DOWNLOAD</button>
+              <button>HELP</button>
+            </nav>
+          </div>
         </div>
+
+        <div className='chartDiv fullWidth'>
+          <div className='chartEachDiv'>
+            <label>KOSPI</label>
+            <div className='chartDetail'>
+              <LineGraph width="200" height="200"/>
+            </div>
+          </div>
+          <div className='chartEachDiv'>
+            <label>KOSDAK</label>
+            <div className='chartDetail'>
+              <LineGraph width="200" height="200"/>
+            </div>
+          </div>
+        </div>
+
+        <div className='overviewDiv fullWidth'>
+          <label>Market Overview</label>
+          <BarGraph width="100" height="200" />
+        </div>
+
+        <div className='favoriteDiv fullWidth'>
+          <div className='favoriteEachDiv'>
+            <label>Samsung</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 5.37%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>SK HYNIX</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 5.37%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>SK SQUARE</label>
+            <div className='favoriteEachNumberDiv numberDown'>
+              <label>- 3.82%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>DB HITECH</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 1.02%</label>
+            </div>
+          </div>
+
+          <div className='favoriteEachDiv'>
+            <label>Samsung</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 5.37%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>SK HYNIX</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 5.37%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>SK SQUARE</label>
+            <div className='favoriteEachNumberDiv numberDown'>
+              <label>- 3.82%</label>
+            </div>
+          </div>
+          <div className='favoriteEachDiv'>
+            <label>DB HITECH</label>
+            <div className='favoriteEachNumberDiv numberUp'>
+              <label>+ 1.02%</label>
+            </div>
+          </div>
+        </div>
+        
+        <div className='stockDiv fullWidth'>
+          <div className='stockEachDiv halfWidth'>
+            <label>KOSPI</label>
+            <KospiGrid />
+          </div>
+          <div className='stockEachDiv halfWidth'>
+            <label>KOSDAK</label>
+            <KosdakGrid />
+          </div>
+        </div>
+
+        <div className='newsDiv fullWidth'>
+          <label>NEWS</label>
+          <div className='newsEachDiv'>
+            <NewsGrid />
+          </div>
+        </div>
+
       </main>
 
       <footer>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel" className="logo" />
-        </a>
+        <div className='footerDiv'>
+
+        </div>
       </footer>
 
       <style jsx>{`
-        .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+        .header{
+          height: 80px;
+          top: 0px;
+          box-shadow: rgb(0 0 0 / 10%) 0px 1px 5px 0px;
+        }
+        .header #headerIcon{
+          margin: 10px;
+          cursor: pointer;
+        }
+        .header #headerIcon:hover{
+          margin: 8px;
+        }
+        .header h2{
+          font-size: 18px;
+          line-height: 2.8;
+          color: #565353;
+          white-space: pre;
+        }
+        .header #titleDiv{
+          height: 100%;
+          display: inline-flex;
+          box-shadow: 0 0px 0px 0 rgb(0 77 165 / 7%);
+        }
+        .header #menuDiv{
+          height: 100%;
+          box-shadow: 0 0px 0px 0 rgb(0 77 165 / 7%);
+        }
+        .header #menuDiv nav{
+          height: 100%;
+          text-align: right;
         }
 
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        footer img {
-          margin-left: 0.5rem;
-        }
-
-        footer a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        a {
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
-        .title {
-          margin: 0;
-          line-height: 1.15;
-          font-size: 4rem;
-        }
-
-        .title,
-        .description {
-          text-align: center;
-        }
-
-        .description {
-          line-height: 1.5;
-          font-size: 1.5rem;
-        }
-
-        code {
-          background: #fafafa;
-          border-radius: 5px;
-          padding: 0.75rem;
-          font-size: 1.1rem;
-          font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-            DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
-        }
-
-        .grid {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          max-width: 800px;
-          margin-top: 3rem;
-        }
-
-        .card {
-          margin: 1rem;
-          flex-basis: 45%;
-          padding: 1.5rem;
-          text-align: left;
-          color: inherit;
-          text-decoration: none;
-          border: 1px solid #eaeaea;
-          border-radius: 10px;
-          transition: color 0.15s ease, border-color 0.15s ease;
-        }
-
-        .card:hover,
-        .card:focus,
-        .card:active {
-          color: #0070f3;
-          border-color: #0070f3;
-        }
-
-        .card h3 {
-          margin: 0 0 1rem 0;
-          font-size: 1.5rem;
-        }
-
-        .card p {
-          margin: 0;
-          font-size: 1.25rem;
-          line-height: 1.5;
-        }
-
-        .logo {
-          height: 1em;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
+        @media (max-width: 1024px){
+          .header #menuDiv nav{
+            display: none;
           }
+        }
+
+        .header #menuDiv nav button{
+          height: 100%;
+          padding: 10px;
+          margin-left: 10px;
+          border: 0;
+          background: #fff;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 15px;
+        }
+        .header #menuDiv nav button:hover{
+          color:#525bc9;
+        }
+        .header #menuDiv nav button:active{
+          background-color:#eee;
+        }
+        .chartDiv{
+          height: auto;
+          background: #eee;
+          margin: 0 auto;
+          text-align: center;
+          margin-top: 10px;
+        }
+        .chartDiv .chartEachDiv{
+          background-color: #fff;
+          width: 40%;
+          min-width: 400px;
+          height: inherit;
+          display: inline-block;
+          margin: 0px 10px 0px 10px;
+        }
+        .chartDiv .chartEachDiv .chartDetail{
+          height: inherit;
+        }
+        .chartDiv .chartEachDiv label{
+          font-size: 20px;
+          font-weight: bold;
+          color: #5a4f4f;
+        }
+        .favoriteDiv{
+          height: auto;
+          margin: 0 auto;
+          text-align: center;
+          margin-top: 50px;
+          display: table;
+        }
+        .favoriteDiv .favoriteEachDiv{
+          height: inherit;
+          margin: 0 auto;
+          width: 20%;
+          display: inline-block;
+          border: 1px solid #eee;
+          cursor: pointer;
+        }
+        .favoriteDiv .favoriteEachDiv:hover{
+          animation-duration: 1s;
+          animation-name: favoriteColorAnime;
+        }
+        @keyframes favoriteColorAnime {
+          from {
+            background-color: #fff;
+          }
+        
+          to {
+            background-color: #eee;
+          }
+        }
+
+        .favoriteDiv .favoriteEachDiv .favoriteEachNumberDiv{
+          height: 100px;
+          margin: 20px;
+          
+          display: flex;
+        }
+        
+        .favoriteDiv label{
+          font-weight: bold;
+          font-size: 20px;
+          color: #5a4f4f;
+        }
+
+        .favoriteDiv .favoriteEachDiv .favoriteEachNumberDiv label{
+          width: 100%;
+          text-align: center;
+          font-weight: bold;
+          font-size: 30px;
+          color: #fff;
+          line-height: 3;
+          cursor: pointer;
+        }
+
+        .overviewDiv{
+          height: auto;
+          margin: 0 auto;
+          text-align: center;
+          margin-top: 50px;
+        }
+
+        .overviewDiv label{
+          font-weight: bold;
+          font-size: 20px;
+          color: #5a4f4f;
+        }
+
+        .stockDiv{
+          height: auto;
+          margin-top: 50px;
+          display: flex;
+        }
+        
+        .stockDiv .stockEachDiv{
+          padding: 20px;
+        }
+
+        .stockDiv .stockEachDiv label{
+          font-size: 20px;
+          color: #5a4f4f;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .newsDiv{
+          height: auto;
+          margin-top: 50px;
+          display: inline-block;
+          text-align: center;
+          margin-botton: 10px;
+        }
+
+        .newsDiv label{
+          font-size: 20px;
+          color: #5a4f4f;
+          font-weight: bold;
+          margin-bottom: 10px;
+        }
+
+        .newsDiv .newsEachDiv{
+          padding: 0px 20px 0px 20px;
+        }
+
+        .fullWidth{
+          width: 100%;
+          float: left;
+          box-shadow: 0 3px 20px 0 rgb(0 77 165 / 7%);
+        }
+
+        .halfWidth{
+          width: 50%;
+          float: left;
+          box-shadow: 0 3px 20px 0 rgb(0 77 165 / 7%);
+        }
+
+        .footerDiv{
+          width: 100%;
+          height: 300px;
+        }
+
+        .numberUp{
+          background-color: #ff6b6b;
+        }
+        .numberDown{
+          background-color: #6262e9;
         }
       `}</style>
 
       <style jsx global>{`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
-
-        * {
-          box-sizing: border-box;
-        }
+        
       `}</style>
     </div>
   )

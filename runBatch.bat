@@ -1,0 +1,1 @@
+cd batch && npx run scheduler.js

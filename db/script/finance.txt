@@ -1,0 +1,64 @@
+create table if not exists cert_cmp (
+	cert_no text,
+	cmp_nm text,
+	upjong_nm text,
+	upjong_dtl_nm text,
+	pub_date text,
+	cert_month text,
+	cert_std_no text,
+	market_type text,
+	cap_stock_amt int,
+	cdate datetime default (datetime('now','localtime')), 
+	cuser text default 'system', 
+	udate datetime default (datetime('now','localtime')),
+	uuser text default 'system'
+);
+
+
+create table if not exists cert_cmp_grade ( 
+	stk_date text,
+	cert_no text,
+	mark_typ text,
+	nice_grd_nm text,
+	nice_grd_nm_bf text,
+	kis_grd_nm text,
+	kis_grd_nm_bf text,
+	kmcc_grd_nm text,
+	kmcc_grd_nm_bf text,
+	cdate datetime default (datetime('now','localtime')), 
+	cuser text default 'system', 
+	udate datetime default (datetime('now','localtime')),
+	uuser text default 'system'
+);
+
+
+create table if not exists cert_kospi_kosdaq(
+	stk_date text,
+	stk_typ text,
+	stk_end_amt int,
+	stk_cpr_bef_amt int,
+	stk_ratio double,
+	trd_cnt int,
+	trd_amt int,
+	cdate datetime default (datetime('now','localtime')), 
+	cuser text default 'system', 
+	udate datetime default (datetime('now','localtime')),
+	uuser text default 'system'
+);
+
+
+create table if not exists cert_stock_daily(
+	cert_no text,
+	stk_date text,
+	stk_end_amt int,
+	stk_cpr_bef_amt int,
+	stk_amt int,
+	stk_max_amt int,
+	stk_min_amt int,
+	trd_amt int,
+	cdate datetime default (datetime('now','localtime')), 
+	cuser text default 'system', 
+	udate datetime default (datetime('now','localtime')),
+	uuser text default 'system'
+);
+

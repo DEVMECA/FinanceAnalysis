@@ -1,4 +1,5 @@
 import {AgGridReact} from 'ag-grid-react';
+
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
@@ -19,7 +20,7 @@ const state = {
 
 const onCellClicked = function(event){location.href="/stock/" + event.data["SYMBOL"]};
 const loadDataHandler = function() {
-    fetch(`http://localhost:3000/api/index/kospi`,
+    fetch(`http://localhost:3000/api/index/kosdaq`,
         {
         method: 'POST',
         headers: {
@@ -38,7 +39,7 @@ const loadDataHandler = function() {
 loadDataHandler();
 
 export default () => ({
-    displayName: 'kospiGrid',
+    displayName: 'kosdakGrid',
     render() {
         return (
 			<div
@@ -52,9 +53,7 @@ export default () => ({
                     defaultColDef={state.defaultColDef}
 					columnDefs={state.columnDefs}
 					rowData={state.rowData}
-                    onCellClicked={onCellClicked}
-                    animateRows={true}
-                    >
+                    onCellClicked={onCellClicked}>
 				</AgGridReact>
 			</div>
 		);

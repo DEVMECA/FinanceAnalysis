@@ -1,8 +1,8 @@
-var sqlite3 = require('sqlite3')
-const fs = require('fs');
+import sqlite3 from 'sqlite3'
+import fs from 'fs'
 
 var db;
-class DBConnector{
+export default class DBConnector{
     constructor() { this.init() }
 
     init(){
@@ -11,7 +11,6 @@ class DBConnector{
                 console.error(err.message);
                 console.error(dbPath);
             } else {
-                console.log('DB Init.');
                 var script_ddl = fs.readFileSync('C:/Project/nodejs_project/financeanalysis/db/script/finance.txt', 'utf8' , (err, data) => {
                     if(err) 
                         console.err(err)
@@ -32,8 +31,6 @@ class DBConnector{
             if (err) {
                 console.error(err.message);
                 console.error(dbPath);
-            } else {
-                console.log('DB Connected.');
             }
         }); 
 
@@ -46,7 +43,6 @@ class DBConnector{
             if(err){
                 console.error(err.message);
             }
-            console.log('DB Closed.');
         });
     }
 
@@ -54,13 +50,14 @@ class DBConnector{
         console.log('sql : ' + sql);
         db = this.connect();
         db.run(sql, callback);
+        this.close(db);
     }
 
     select(sql, callback){
-        var result = [];
+        console.log('sql : ' + sql);
         db = this.connect();
         db.all(sql, [], callback);
-        return result;
+        this.close(db);
     }
 
 }

@@ -6,7 +6,7 @@ import Chart from 'chart.js/auto'
 import BarGraph from './chart/bar';
 import LineGraph from './chart/line'
 import KospiGrid from './grid/kospiGrid'
-import KosdakGrid from './grid/kosdakGrid'
+import KosdakGrid from './grid/kosdaqGrid'
 import NewsGrid from './grid/newsGrid'
 
 import BubbleGraph from './chart/bubble';

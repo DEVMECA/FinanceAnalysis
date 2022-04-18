@@ -2,11 +2,13 @@ var axios = require('axios')
 var cheerio = require('cheerio')
 var sqlite3 = require('sqlite3');
 var DBConnector = require('../connector/dbConnector')
+
+// TODO: 모듈화 개발 진행 중
 //var StringUtil = require('../../utils/stringUtil')
 
 var configure = [];
 var dbConnector = new DBConnector();
-class ScrapingStock {
+class ScrapingKospiAndKosdaq {
 
   constructor(configure) { this.configure = configure }
 
@@ -35,35 +37,35 @@ class ScrapingStock {
         const $stockList = $('table tbody tr');
   
         $stockList.each(function (i, el) {
+          const stk_typ = 'KOSPI';
           const stk_date = $(this).children('td').eq(0).text()
                               .replace(/\n/g,'').replace(/\t/g,'').replace(/,/g,'');
           const stk_end_amt = $(this).children('td').eq(1).text().replace(/,/g,'');
-          
           const stk_cpr_bef_amt = $(this).children('td').eq(2).text().replace(/,/g,'')
                                   .replace(/\n/g,'').replace(/\t/g,'');
-          const stk_amt = $(this).children('td').eq(3).text().replace(/,/g,'');
-          const stk_max_amt = $(this).children('td').eq(4).text().replace(/,/g,'');
-          const stk_min_amt = $(this).children('td').eq(5).text().replace(/,/g,'');
-          const trd_amt = $(this).children('td').eq(6).text().replace(/,/g,'');
-
+          const stk_ratio = $(this).children('td').eq(3).text().replace(/,/g,'')
+                                  .replace(/\n/g,'').replace(/\t/g,'');
+          const trd_cnt = $(this).children('td').eq(4).text().replace(/,/g,'');
+          const trd_amt = $(this).children('td').eq(5).text().replace(/,/g,'');
+          
+          // TODO: 모듈화 개발 진행 중
           //var nowdate = StringUtil.convertDateFormat(new Date(), '.');
           //console.log(nowdate + ':' + nowdate);
           if(stk_date.length<8)
             return true;
-          
+
           var stk_cpr = "";
           if($(this).children('td').eq(2).children('img').attr('src').indexOf('ico_down')>=0){
             stk_cpr = "-";
           }
-
+          
           result[i] = {
-            cert_no: obj.cert_no,
+            stk_typ: obj.stk_typ,
             stk_date: stk_date,
             stk_end_amt: stk_end_amt,
             stk_cpr_bef_amt: stk_cpr + stk_cpr_bef_amt,
-            stk_amt: stk_amt,
-            stk_max_amt: stk_max_amt,
-            stk_min_amt: stk_min_amt,
+            stk_ratio: stk_ratio,
+            trd_cnt: trd_cnt,
             trd_amt: trd_amt,
           };
 
@@ -73,71 +75,72 @@ class ScrapingStock {
         return result;
       })
       .then((res) => {
-          result.forEach((item) => {
-            dbConnector.select(`
-                select * 
-                from cert_stock_daily
-                where cert_no = '${item.cert_no}'
-                and  stk_date = '${item.stk_date}'
-                `, 
-                (err, stock) =>{
-                  if(err){
-                    console.error(err.message);
-                    return false;
-                  }
-    
-                  if(stock.length > 0){
-                    this.updateStock(item);
-                    return false;
-                  }
-    
-                  this.insertStock(item);
-                });
-            });          
+        result.forEach((item) => {
+          dbConnector.select(`
+            select * 
+            from cert_kospi_kosdaq
+            where stk_date = '${item.stk_date}'
+            and  stk_typ = '${item.stk_typ}'
+            `, 
+            (err, stock) =>{
+              if(err){
+                console.error(err.message);
+                return false;
+              }
+
+              if(stock.length > 0){
+                this.updateKospiKosdaq(item);
+                return false;
+              }
+
+              this.insertKospiKosdaq(item);
+            });
         });
-  }
-
-
-  insertStock(item){
-    dbConnector.insert(`
-          insert into cert_stock_daily (
-            cert_no,
-            stk_date,
-            stk_end_amt,
-            stk_cpr_bef_amt,
-            stk_max_amt,
-            stk_min_amt,
-            trd_amt
-          )
-          values(
-            '${item.cert_no}',
-            '${item.stk_date}',
-            '${item.stk_end_amt}',
-            '${item.stk_cpr_bef_amt}',
-            '${item.stk_max_amt}',
-            '${item.stk_min_amt}',
-            '${item.trd_amt}'
-          );
-        `
-      , 
-      (err) =>{
-        if(err){
-          console.error(err.message);
-        }
       });
   }
 
-  updateStock(item){
+
+  insertKospiKosdaq(item){
     dbConnector.insert(`
-              update cert_stock_daily
+              insert into cert_kospi_kosdaq (
+                stk_typ,
+                stk_date,
+                stk_end_amt,
+                stk_cpr_bef_amt,
+                stk_ratio,
+                trd_cnt,
+                trd_amt
+              )
+              values(
+                '${item.stk_typ}',
+                '${item.stk_date}',
+                '${item.stk_end_amt}',
+                '${item.stk_cpr_bef_amt}',
+                '${item.stk_ratio}',
+                '${item.trd_cnt}',
+                '${item.trd_amt}'
+              );
+          `
+          , 
+          (err) =>{
+            if(err){
+              console.error(err.message);
+            }
+          }
+      );
+  }
+
+  updateKospiKosdaq(item){
+    dbConnector.insert(`
+              update cert_kospi_kosdaq
               set uuser = 'system',
                   udate = datetime('now','localtime'),
                   stk_end_amt = '${item.stk_end_amt}',
                   stk_cpr_bef_amt = '${item.stk_cpr_bef_amt}',
-                  stk_max_amt = '${item.stk_max_amt}',
-                  stk_min_amt = '${item.stk_min_amt}',
+                  stk_ratio = '${item.stk_ratio}',
+                  trd_cnt = '${item.trd_cnt}',
                   trd_amt = '${item.trd_amt}'
-              where cert_no = '${item.cert_no}'
+              where stk_typ = '${item.stk_typ}'
               and stk_date = '${item.stk_date}'
           `
           , 
@@ -150,4 +153,5 @@ class ScrapingStock {
   }
 
 }
-module.exports = ScrapingStock
+module.exports = ScrapingKospiAndKosdaq
+

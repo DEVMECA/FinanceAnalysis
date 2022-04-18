@@ -62,3 +62,17 @@ create table if not exists cert_stock_daily(
 	uuser text default 'system'
 );
 
+create table if not exists cert_stock_timely(
+	cert_no text,
+	stk_time text,
+	chc_amt text,
+	stk_cpr_bef_amt int,
+	sel_amt int,
+	buy_amt int,
+	trd_amt int,
+	chg_amt int,
+	cdate datetime default (datetime('now','localtime')), 
+	cuser text default 'system', 
+	udate datetime default (datetime('now','localtime')),
+	uuser text default 'system'
+);

@@ -8,3 +8,6 @@ npm install --save moment
 npm install --save cron
 npm install --save path
 npm install --save fs
+npm install -y webpack
+npm install -y webpack-cli
+npm install -y sqlite3

@@ -20,7 +20,7 @@ const state = {
 
 const onCellClicked = function(event){location.href="/stock/" + event.data["SYMBOL"]};
 const loadDataHandler = function() {
-    fetch(`http://localhost:3000/api/index/kosdaq`,
+    fetch(`/api/index/kosdaq`,
         {
         method: 'POST',
         headers: {

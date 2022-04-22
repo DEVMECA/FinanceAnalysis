@@ -19,7 +19,7 @@ const state = {
 
 const onCellClicked = function(event){location.href="/stock/" + event.data["SYMBOL"]};
 const loadDataHandler = function() {
-    fetch(`http://localhost:3000/api/index/kospi`,
+    fetch(`/api/index/kospi`,
         {
         method: 'POST',
         headers: {

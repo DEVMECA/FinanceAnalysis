@@ -2,9 +2,7 @@ var axios = require('axios')
 var cheerio = require('cheerio')
 var sqlite3 = require('sqlite3');
 var DBConnector = require('../connector/dbConnector')
-
-// TODO: 모듈화 개발 진행 중
-//var StringUtil = require('../../utils/stringUtil')
+var StringUtil = require('../../utils/StringUtil')
 
 var configure = [];
 var dbConnector = new DBConnector();
@@ -48,11 +46,13 @@ class ScrapingKospiAndKosdaq {
           const trd_cnt = $(this).children('td').eq(4).text().replace(/,/g,'');
           const trd_amt = $(this).children('td').eq(5).text().replace(/,/g,'');
           
-          // TODO: 모듈화 개발 진행 중
-          //var nowdate = StringUtil.convertDateFormat(new Date(), '.');
-          //console.log(nowdate + ':' + nowdate);
-          if(stk_date.length<8)
+          var nowdate = StringUtil.convertDateFormat(new Date(), '.');
+          if(stk_date.length<8){
             return true;
+          }
+          else if(stk_date!=nowdate){
+            return false;
+          }
 
           var stk_cpr = "";
           if($(this).children('td').eq(2).children('img').attr('src').indexOf('ico_down')>=0){
@@ -60,7 +60,7 @@ class ScrapingKospiAndKosdaq {
           }
           
           result[i] = {
-            stk_typ: obj.stk_typ,
+            stk_typ: stk_typ,
             stk_date: stk_date,
             stk_end_amt: stk_end_amt,
             stk_cpr_bef_amt: stk_cpr + stk_cpr_bef_amt,

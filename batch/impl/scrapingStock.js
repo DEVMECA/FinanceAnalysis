@@ -2,7 +2,7 @@ var axios = require('axios')
 var cheerio = require('cheerio')
 var sqlite3 = require('sqlite3');
 var DBConnector = require('../connector/dbConnector')
-//var StringUtil = require('../../utils/stringUtil')
+var StringUtil = require('../../utils/StringUtil')
 
 var configure = [];
 var dbConnector = new DBConnector();
@@ -35,6 +35,7 @@ class ScrapingStock {
         const $stockList = $('table tbody tr');
   
         $stockList.each(function (i, el) {
+          const cert_no = obj.cert_no;
           const stk_date = $(this).children('td').eq(0).text()
                               .replace(/\n/g,'').replace(/\t/g,'').replace(/,/g,'');
           const stk_end_amt = $(this).children('td').eq(1).text().replace(/,/g,'');
@@ -46,18 +47,21 @@ class ScrapingStock {
           const stk_min_amt = $(this).children('td').eq(5).text().replace(/,/g,'');
           const trd_amt = $(this).children('td').eq(6).text().replace(/,/g,'');
 
-          //var nowdate = StringUtil.convertDateFormat(new Date(), '.');
-          //console.log(nowdate + ':' + nowdate);
-          if(stk_date.length<8)
+          var nowdate = StringUtil.convertDateFormat(new Date(), '.');
+          if(stk_date.length<8){
             return true;
-          
+          }
+          else if(stk_date!=nowdate){
+            return false;
+          }
+
           var stk_cpr = "";
           if($(this).children('td').eq(2).children('img').attr('src').indexOf('ico_down')>=0){
             stk_cpr = "-";
           }
 
           result[i] = {
-            cert_no: obj.cert_no,
+            cert_no: cert_no,
             stk_date: stk_date,
             stk_end_amt: stk_end_amt,
             stk_cpr_bef_amt: stk_cpr + stk_cpr_bef_amt,

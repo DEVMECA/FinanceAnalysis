@@ -1,15 +1,19 @@
 var ScrapingStock = require('./impl/scrapingStock')
+var ScrapingStockTimely = require('./impl/scrapingStockTimely')
 var ScrapingKospiAndKosdaq = require('./impl/scrapingKospiAndKosdaq')
 var DBConnector = require('./connector/dbConnector')
+var StringUtil = require('../utils/stringUtil')
+var DateUtil = require('../utils/DateUtil')
 
 var CronJob = require('cron').CronJob; 
 var scrapingStock = new ScrapingStock(); 
+var scrapingStockTimely = new ScrapingStockTimely(); 
 var scrapingKospiAndKosdaq = new ScrapingKospiAndKosdaq();
 var dbConnector = new DBConnector();
 // 각 기업별 주가데이터 수집(기업별 조회)
 new CronJob('*/5 * * * * *', function() { 
     console.log('Load scrapingStock Batch ' + new Date());
-    var cert_list = dbConnector.select("select * from cert_cmp;", (err, data) => {
+    dbConnector.select("select * from cert_cmp;", (err, data) => {
         if(err){
             console.err(err)
         }
@@ -22,7 +26,20 @@ new CronJob('*/5 * * * * *', function() {
                 body : []
             };
             scrapingStock.crawlUrl(obj);
+            
+            const date = new Date();
+            const yyyymmdd = DateUtil.yyyymmdd(date);
+            const nowdatetime = DateUtil.nowdatetime(date);
+
+            const obj_timely = {
+                cert_no : item.cert_no,
+                stk_date : yyyymmdd,
+                url : "http://finance.naver.com/item/sise_time.naver?code=" + item.cert_no + "&page=1&thistime=" + nowdatetime,
+                body : []
+            };
+            scrapingStockTimely.crawlUrl(obj_timely);
         })
+
     });
 }, null, true, ''); 
 
@@ -45,5 +62,4 @@ new CronJob('*/5 9-16 * * * *', function() {
     scrapingKospiAndKosdaq.crawlUrl(obj);
 
 }, null, true, ''); 
-
 

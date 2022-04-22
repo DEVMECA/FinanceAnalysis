@@ -64,6 +64,7 @@ create table if not exists cert_stock_daily(
 
 create table if not exists cert_stock_timely(
 	cert_no text,
+	stk_date text,
 	stk_time text,
 	chc_amt text,
 	stk_cpr_bef_amt int,

@@ -5,15 +5,16 @@ export default (req, res) => {
     loadKospi(function(data){
         if (req.method === 'POST') {
             try {
-                res.status(200).end(JSON.stringify(data));
+                res.status(200).json(JSON.stringify(data));
+                res.end();
             } catch (err) {
                 res.status(err).json({});
+                res.end();
             }
         } else {
             res.status(405);
             res.end();
         }
-        
     });
 }
 
